@@ -1,6 +1,7 @@
 package Cliente;
 
 import Common.ConnectionData;
+import Cliente.Vista.VChat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +18,7 @@ public class ChatClient {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    private JFrame frame;
-    private JTextArea chatArea;
-    private JTextField messageField;
+    private VChat vChat;  // Referencia a la ventana VChat
     private String nickname;
 
     public ChatClient(String serverAddress, int serverPort) {
@@ -29,25 +28,14 @@ public class ChatClient {
             in = new ObjectInputStream(serverSocket.getInputStream());
             nickname = null;
 
-            frame = new JFrame("Chat Client");
+            vChat = new VChat();  // Crea una instancia de VChat
+
+            // Establece VChat como el contenido principal del JFrame
+            JFrame frame = new JFrame("Chat Client");
+            frame.setContentPane(vChat.getpPrincipal());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 300);
             frame.setLocationRelativeTo(null);
-
-            chatArea = new JTextArea();
-            chatArea.setEditable(false);
-            frame.add(new JScrollPane(chatArea), BorderLayout.CENTER);
-
-            messageField = new JTextField();
-            frame.add(messageField, BorderLayout.SOUTH);
-
-            messageField.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    sendMessage(e.getActionCommand());
-                    messageField.setText("");
-                }
-            });
-
             frame.setVisible(true);
 
             Object response = in.readObject();
@@ -59,9 +47,8 @@ public class ChatClient {
             out.flush();
 
             response = in.readObject();
-            chatArea.append((String) response + "\n");
+            vChat.appendToChatArea((String) response);
 
-            // Configure el cliente para recibir mensajes multicast
             group = InetAddress.getByName("239.0.0.1");
             multicastSocket = new MulticastSocket(8888);
             multicastSocket.joinGroup(group);
@@ -72,7 +59,7 @@ public class ChatClient {
                 multicastSocket.receive(packet);
                 String message = new String(packet.getData(), 0, packet.getLength());
 
-                appendToChatArea(message);
+                vChat.appendToChatArea(message);
 
                 System.out.println(message);
             }
@@ -100,15 +87,9 @@ public class ChatClient {
         }
     }
 
-    private void appendToChatArea(String message) {
-        SwingUtilities.invokeLater(() -> {
-            chatArea.append(message  + "\n");
-        });
-    }
-
     public static void main(String[] args) {
-        String serverAddress = "127.0.0.1"; // Cambia a la dirección IP o nombre de host de tu servidor
-        int serverPort = 12345; // Cambia al puerto en el que escucha tu servidor
+        String serverAddress = "127.0.0.1";  // Cambia a la dirección IP o nombre de host de tu servidor
+        int serverPort = 12345;  // Cambia al puerto en el que escucha tu servidor
 
         SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
     }

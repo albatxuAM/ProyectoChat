@@ -10,6 +10,8 @@ public class VChat {
     private JPanel pBotones;
     private JButton enviarButton, logOutButton;
     private JTextField tfMsg;
+    private JTextArea chatArea;
+    private JTable userList;
 
     public VChat(/*Usuario user*/) {
         // pTabs.addTab("Resultados", new VPrincipal(user).getpPrincipal());
@@ -30,4 +32,8 @@ public class VChat {
         return pPrincipal;
     }
 
+    public void appendToChatArea(String message) {
+        chatArea.append(message + "\n");
+        System.out.println(message);
+    }
 }
