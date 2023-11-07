@@ -1,6 +1,8 @@
 package Cliente.Vista;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 
 public class VChat {
     private JPanel pPrincipal;
@@ -32,8 +34,16 @@ public class VChat {
         return pPrincipal;
     }
 
+    public JTextArea getChatArea() {
+        return chatArea;
+    }
+
     public void appendToChatArea(String message) {
         chatArea.append(message + "\n");
         System.out.println(message);
+    }
+
+    public void updateConnectedUsersList(List<String> connectedUsers) {
+        System.out.println(connectedUsers);
     }
 }
