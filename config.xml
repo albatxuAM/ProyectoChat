@@ -2,4 +2,6 @@
     <image_path>resources\img\</image_path>
     <broadcast_ip>239.0.0.1</broadcast_ip>
     <broadcast_port>8888</broadcast_port>
+
+    <debug>true</debug>
 </config>

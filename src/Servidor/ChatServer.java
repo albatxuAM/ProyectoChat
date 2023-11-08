@@ -1,11 +1,9 @@
 package Servidor;
 
+import Common.ChatMsg;
 import Common.ConnectionData;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,14 +39,37 @@ public class ChatServer {
         return !connectedClients.containsKey(nickname);
     }
 
+   // private static void broadcast(String message) {
+   //     try {
+   //         System.out.println(message);
+//
+   //         InetAddress group = InetAddress.getByName("239.0.0.1");
+   //         multicastSocket.setTimeToLive(1);
+   //         byte[] data = message.getBytes();
+   //         DatagramPacket packet = new DatagramPacket(data, data.length, group, 8888);
+   //         multicastSocket.send(packet);
+   //     } catch (IOException e) {
+   //         e.printStackTrace();
+   //     }
+   // }
+
     private static void broadcast(String message) {
+        ChatMsg data = new ChatMsg(message);
         try {
             System.out.println(message);
 
+            // Crear un ObjectOutputStream para serializar el objeto
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(data);
+            objectOutputStream.flush();
+
+            // Obtener el array de bytes serializado
+            byte[] serializedData = byteArrayOutputStream.toByteArray();
+
+            // Crear el DatagramPacket y enviar los datos
             InetAddress group = InetAddress.getByName("239.0.0.1");
-            multicastSocket.setTimeToLive(1);
-            byte[] data = message.getBytes();
-            DatagramPacket packet = new DatagramPacket(data, data.length, group, 8888);
+            DatagramPacket packet = new DatagramPacket(serializedData, serializedData.length, group, 8888);
             multicastSocket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();

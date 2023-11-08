@@ -1,27 +1,34 @@
 package Common;
 
+import java.awt.*;
 import java.io.Serializable;
 
 public class ChatMsg implements Serializable {
-    private ChatMsgType type;
-    private int payloadSize;
-    private byte[] payload;
+    private String msg;
+    private Color color;
 
-    public ChatMsg(ChatMsgType type, byte[] payload) {
-        this.type = type;
-        this.payload = payload;
-        this.payloadSize = payload.length;
+    public ChatMsg(String msg) {
+        this.msg = msg;
     }
 
-    public ChatMsgType getType() {
-        return type;
+    public ChatMsg(String msg, Color color) {
+        this.msg = msg;
+        this.color = color;
     }
 
-    public int getPayloadSize() {
-        return payloadSize;
+    public String getMsg() {
+        return msg;
     }
 
-    public byte[] getPayload() {
-        return payload;
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

@@ -104,12 +104,6 @@ public class ChatClient {
                     closeClient();
                 }
             });
-
-//            while (true) {
-//                //sendMessage("hola");
-//            }
-
-
         } catch (ConnectException cnEx) {
             Validaciones.mostrarError("Connection refused");
             closeClient();
@@ -120,8 +114,8 @@ public class ChatClient {
     }
 
     public static void main(String[] args) {
-        String serverAddress = "127.0.0.1";  // Cambia a la dirección IP o nombre de host de tu servidor
-        int serverPort = 12345;  // Cambia al puerto en el que escucha tu servidor
+        String serverAddress = "127.0.0.1";
+        int serverPort = 12345;
 
         SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
     }

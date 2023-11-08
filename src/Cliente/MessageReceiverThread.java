@@ -2,13 +2,19 @@ package Cliente;
 
 import Cliente.Modelo.Excepciones.Validaciones;
 import Cliente.Vista.VChat;
+import Common.ChatMsg;
+import Common.ConnectionData;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+import java.util.List;
 
 public class MessageReceiverThread extends Thread {
     InetAddress group;
@@ -28,17 +34,44 @@ public class MessageReceiverThread extends Thread {
             byte[] buffer = new byte[1024];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
+//            while (receive) {
+//                multicastSocket.receive(packet);
+//                String message = new String(packet.getData(), 0, packet.getLength());
+//
+//                SwingUtilities.invokeLater(() -> appendToChatArea(message));
+//            }
             while (receive) {
                 multicastSocket.receive(packet);
-                String message = new String(packet.getData(), 0, packet.getLength());
 
-                SwingUtilities.invokeLater(() -> appendToChatArea(message));
+                // Convertir los datos recibidos en un objeto
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(packet.getData());
+                ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+                Object receivedObject = objectInputStream.readObject();
+
+                if (receivedObject instanceof ConnectionData) {
+                    ConnectionData connectionData = (ConnectionData) receivedObject;
+                    List<String> connectedUsers = connectionData.getConnectedUsers();
+                    SwingUtilities.invokeLater(() -> updateUsers(connectedUsers));
+                }
+                if (receivedObject instanceof ChatMsg) {
+                    ChatMsg chatMsg = (ChatMsg) receivedObject;
+                    SwingUtilities.invokeLater(() -> appendToChatArea(chatMsg.getMsg()));
+                }
+                else {
+                    String message = new String(packet.getData(), 0, packet.getLength());
+                    SwingUtilities.invokeLater(() -> appendToChatArea(message));
+
+                    //SwingUtilities.invokeLater(() -> appendToChatArea(receivedObject.toString()));
+                }
+
             }
         } catch (SocketException cnEx) {
             Validaciones.mostrarError("Connection ended");
             receive = false;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -60,8 +93,16 @@ public class MessageReceiverThread extends Thread {
     }
 
     private void appendToChatArea(String message) {
-        System.out.println(message);
         vChat.appendToChatArea(message);
+    }
+
+    private void appendToChatArea(String message, Color color) {
+        vChat.appendToChatArea(message);
+    }
+
+
+    private void updateUsers(List<String> connectedUsers) {
+        vChat.updateConnectedUsersList(connectedUsers);
     }
 }
 

@@ -41,6 +41,24 @@ public class VChat {
     public void appendToChatArea(String message) {
         chatArea.append(message + "\n");
         System.out.println(message);
+
+        /*
+          // Crear estilos para diferentes colores
+        Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+        Style redStyle = doc.addStyle("Red", defaultStyle);
+        StyleConstants.setForeground(redStyle, Color.RED);
+        Style blueStyle = doc.addStyle("Blue", defaultStyle);
+        StyleConstants.setForeground(blueStyle, Color.BLUE);
+
+        try {
+            // Agregar texto con diferentes colores
+            doc.insertString(doc.getLength(), "This is red. ", redStyle);
+            doc.insertString(doc.getLength(), "This is blue. ", blueStyle);
+            doc.insertString(doc.getLength(), "This is normal text.", defaultStyle);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+         */
     }
 
     public void updateConnectedUsersList(List<String> connectedUsers) {
