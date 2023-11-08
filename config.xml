@@ -1,9 +1,5 @@
 <config>
     <image_path>resources\img\</image_path>
-    <data_path>resources\dat\</data_path>
-    <xml_path>resources\xml\</xml_path>
-    <xml_partidas>resources\partidas\</xml_partidas>
-
-    <game_icon>icon.png</game_icon>
-    <ligaActual>2023</ligaActual>
+    <broadcast_ip>239.0.0.1</broadcast_ip>
+    <broadcast_port>8888</broadcast_port>
 </config>

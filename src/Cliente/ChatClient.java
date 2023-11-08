@@ -1,15 +1,18 @@
 package Cliente;
 
+import Cliente.Modelo.Excepciones.Validaciones;
 import Cliente.Vista.VChat;
 import Common.ConnectionData;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.List;
 
 public class ChatClient {
@@ -25,8 +28,8 @@ public class ChatClient {
     private boolean exit = false;
 
     public ChatClient(String serverAddress, int serverPort) {
-        try {
-            serverSocket = new Socket(serverAddress, serverPort);
+        try (Socket serverSocket =  new Socket(serverAddress, serverPort)) {
+            this.serverSocket = serverSocket;
             out = new ObjectOutputStream(serverSocket.getOutputStream());
             in = new ObjectInputStream(serverSocket.getInputStream());
             nickname = null;
@@ -39,9 +42,6 @@ public class ChatClient {
             frame.setSize(400, 300);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-
-            //   Object response = in.readObject();
-
 
             boolean connAccepted = false;
             while (!connAccepted) {
@@ -58,7 +58,7 @@ public class ChatClient {
                     // Envía el apodo al servidor
                     out.writeObject(nickname);
                     out.flush();
-                } else if (response.equals("Nickname accepted")) {
+                } else if (response.toString().contains("Nickname accepted")) {
                     JOptionPane.showMessageDialog(null, response.toString(), "Server response", JOptionPane.INFORMATION_MESSAGE);
                     System.out.println(response);
                 } else {
@@ -74,23 +74,56 @@ public class ChatClient {
             MessageReceiverThread receiverThread = new MessageReceiverThread(multicastSocket, vChat);
             receiverThread.start();
 
-            sendMessage("hola");
-            while (!exit) {
-                //leer del la consola y mandar
-                //sendMessage("hola");
-            }
+            // Agregar un ActionListener al botón enviarButton
+            vChat.getEnviarButton().addActionListener(e -> {
+                String message = vChat.getTfMsg().getText();
+                sendMessage(message);
+                vChat.getTfMsg().setText("");
+            });
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
+            // Agregar un KeyListener al campo de texto tfMsg
+            vChat.getTfMsg().addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        String message = vChat.getTfMsg().getText();
+                        sendMessage(message);
+                        vChat.getTfMsg().setText("");
+                    }
+                }
+            });
+
+            // cerrar conexiones al cerrar la aplicación
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    closeClient();
+                }
+            });
+
+        } catch (ConnectException cnEx) {
+            Validaciones.mostrarError("Connection refused");
+            closeClient();
+        }
+        catch (IOException | ClassNotFoundException e) {
+            Validaciones.mostrarError(e.getMessage());
+            closeClient();
+        }
+    }
+
+    private void closeClient() {
+        System.err.println("closeClient");
+        try {
+            if (serverSocket != null)
                 serverSocket.close();
+            if (multicastSocket != null) {
                 multicastSocket.leaveGroup(group);
                 multicastSocket.close();
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
             }
+        } catch (IOException ex) {
+            Validaciones.mostrarError(ex.getMessage());
         }
+
     }
 
     private void sendMessage(String message) {
@@ -99,7 +132,7 @@ public class ChatClient {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                Validaciones.mostrarError(e.getMessage());
             }
         }
     }

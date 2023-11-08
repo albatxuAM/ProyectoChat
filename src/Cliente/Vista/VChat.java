@@ -46,4 +46,12 @@ public class VChat {
     public void updateConnectedUsersList(List<String> connectedUsers) {
         System.out.println(connectedUsers);
     }
+
+    public JButton getEnviarButton() {
+        return enviarButton;
+    }
+
+    public JTextField getTfMsg() {
+        return tfMsg;
+    }
 }

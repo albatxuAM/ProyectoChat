@@ -1,5 +1,6 @@
 package Servidor;
 
+import Cliente.Modelo.Excepciones.Validaciones;
 import Common.ConnectionData;
 
 import java.io.IOException;
@@ -72,18 +73,20 @@ public class ChatServer {
                 out.writeObject(new ConnectionData(connectedUsersList));
                 out.flush();
 
-
                 String message;
                 while ((message = (String) in.readObject()) != null) {
                     broadcast(nickname + ": " + message);
                 }
+            } catch (SocketException cnEx) {
+                System.err.println("SocketException: " + cnEx.getMessage());
+                //System.out.println(nickname + " has left the chat.");
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("IOException " + e.getMessage());
             } finally {
-                if (nickname != null) {
-                    connectedClients.remove(nickname);
-                    broadcast(nickname + " has left the chat.");
-                }
+                // if (nickname != null) {
+                //     connectedClients.remove(nickname);
+                //     broadcast(nickname + " has left the chat.");
+                // }
             }
         }
     }
