@@ -31,8 +31,9 @@ public class ChatClient {
     private boolean exit = false;
 
     public ChatClient(String serverAddress, int serverPort) {
-        try (Socket serverSocket = new Socket(serverAddress, serverPort)) {
-            this.serverSocket = serverSocket;
+        //try (Socket serverSocket = new Socket(serverAddress, serverPort)) {
+        try {
+            serverSocket = new Socket(serverAddress, serverPort);
             out = new ObjectOutputStream(serverSocket.getOutputStream());
             in = new ObjectInputStream(serverSocket.getInputStream());
             nickname = null;
