@@ -1,8 +1,8 @@
 package Servidor;
 
-import Cliente.Modelo.Excepciones.Validaciones;
 import Common.ConnectionData;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,27 +66,37 @@ public class ChatServer {
                     } else {
                         out.writeObject("Nickname is already in use. Please choose another one.");
                         out.flush();
-                       // clientSocket.close();
+                        // clientSocket.close();
                     }
                 }
                 List<String> connectedUsersList = new ArrayList<>(connectedClients.keySet());
                 out.writeObject(new ConnectionData(connectedUsersList));
                 out.flush();
 
-                String message;
-                while ((message = (String) in.readObject()) != null) {
+                while (true) {
+                    Object message = in.readObject();
                     broadcast(nickname + ": " + message);
                 }
             } catch (SocketException cnEx) {
                 System.err.println("SocketException: " + cnEx.getMessage());
-                //System.out.println(nickname + " has left the chat.");
-            } catch (IOException | ClassNotFoundException e) {
+                disconectClient();
+            }catch (EOFException eofEx) {
+                System.err.println("EOFException: " + eofEx.getMessage());
+                disconectClient();
+            }  catch (ClassNotFoundException e) {
+                System.err.println("ClassNotFoundException " + e.getMessage());
+                disconectClient();
+            } catch (IOException e) {
                 System.err.println("IOException " + e.getMessage());
-            } finally {
-                // if (nickname != null) {
-                //     connectedClients.remove(nickname);
-                //     broadcast(nickname + " has left the chat.");
-                // }
+                disconectClient();
+            }
+        }
+
+        private void disconectClient() {
+            if (nickname != null) {
+                System.out.println(nickname + " has left the chat.");
+                connectedClients.remove(nickname);
+                broadcast(nickname + " has left the chat.");
             }
         }
     }

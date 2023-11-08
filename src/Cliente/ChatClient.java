@@ -21,6 +21,7 @@ public class ChatClient {
     private Socket serverSocket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    MessageReceiverThread receiverThread;
 
     private VChat vChat;  // Referencia a la ventana VChat
     private String nickname;
@@ -71,7 +72,7 @@ public class ChatClient {
             multicastSocket = new MulticastSocket(8888);
             multicastSocket.joinGroup(group);
 
-            MessageReceiverThread receiverThread = new MessageReceiverThread(multicastSocket, vChat);
+            receiverThread = new MessageReceiverThread(multicastSocket, vChat);
             receiverThread.start();
 
             // Agregar un ActionListener al botón enviarButton
@@ -114,6 +115,7 @@ public class ChatClient {
     private void closeClient() {
         System.err.println("closeClient");
         try {
+            receiverThread.setReceive(false);
             if (serverSocket != null)
                 serverSocket.close();
             if (multicastSocket != null) {
