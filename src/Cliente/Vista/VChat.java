@@ -2,7 +2,6 @@ package Cliente.Vista;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.util.List;
 
 public class VChat {
@@ -48,7 +47,7 @@ public class VChat {
         System.out.println(connectedUsers);
         DefaultTableModel model = new DefaultTableModel();
         // Agrega una columna llamada "Usuarios Conectados" a la tabla
-        model.addColumn("Usuarios Conectados");
+        model.addColumn("Usuarios");
         // Agrega los usuarios conectados al modelo de la tabla
         for (String user : connectedUsers) {
             model.addRow(new Object[]{user});

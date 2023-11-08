@@ -37,6 +37,24 @@ public class ChatServer {
         }
     }
 
+    private static boolean isNicknameAvailable(String nickname) {
+        return !connectedClients.containsKey(nickname);
+    }
+
+    private static void broadcast(String message) {
+        try {
+            System.out.println(message);
+
+            InetAddress group = InetAddress.getByName("239.0.0.1");
+            multicastSocket.setTimeToLive(1);
+            byte[] data = message.getBytes();
+            DatagramPacket packet = new DatagramPacket(data, data.length, group, 8888);
+            multicastSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static class ClientHandler implements Runnable {
         private Socket clientSocket;
         private String nickname;
@@ -80,10 +98,10 @@ public class ChatServer {
             } catch (SocketException cnEx) {
                 System.err.println("SocketException: " + cnEx.getMessage());
                 disconectClient();
-            }catch (EOFException eofEx) {
+            } catch (EOFException eofEx) {
                 System.err.println("EOFException: " + eofEx.getMessage());
-                disconectClient();
-            }  catch (ClassNotFoundException e) {
+//                disconectClient();
+            } catch (ClassNotFoundException e) {
                 System.err.println("ClassNotFoundException " + e.getMessage());
                 disconectClient();
             } catch (IOException e) {
@@ -98,24 +116,6 @@ public class ChatServer {
                 connectedClients.remove(nickname);
                 broadcast(nickname + " has left the chat.");
             }
-        }
-    }
-
-    private static boolean isNicknameAvailable(String nickname) {
-        return !connectedClients.containsKey(nickname);
-    }
-
-    private static void broadcast(String message) {
-        try {
-            System.out.println(message);
-
-            InetAddress group = InetAddress.getByName("239.0.0.1");
-            multicastSocket.setTimeToLive(1);
-            byte[] data = message.getBytes();
-            DatagramPacket packet = new DatagramPacket(data, data.length, group, 8888);
-            multicastSocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

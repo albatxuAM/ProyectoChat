@@ -12,24 +12,26 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.Socket;
 import java.util.List;
 
 public class ChatClient {
+    MessageReceiverThread receiverThread;
     private MulticastSocket multicastSocket;
     private InetAddress group;
     private Socket serverSocket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    MessageReceiverThread receiverThread;
-
     private VChat vChat;  // Referencia a la ventana VChat
     private String nickname;
 
     private boolean exit = false;
 
     public ChatClient(String serverAddress, int serverPort) {
-        try (Socket serverSocket =  new Socket(serverAddress, serverPort)) {
+        try (Socket serverSocket = new Socket(serverAddress, serverPort)) {
             this.serverSocket = serverSocket;
             out = new ObjectOutputStream(serverSocket.getOutputStream());
             in = new ObjectInputStream(serverSocket.getInputStream());
@@ -72,7 +74,7 @@ public class ChatClient {
             multicastSocket = new MulticastSocket(8888);
             multicastSocket.joinGroup(group);
 
-            receiverThread = new MessageReceiverThread(multicastSocket, vChat);
+            receiverThread = new MessageReceiverThread(multicastSocket, vChat, group);
             receiverThread.start();
 
             // Agregar un ActionListener al botón enviarButton
@@ -102,30 +104,40 @@ public class ChatClient {
                 }
             });
 
+//            while (true) {
+//                //sendMessage("hola");
+//            }
+
+
         } catch (ConnectException cnEx) {
             Validaciones.mostrarError("Connection refused");
             closeClient();
-        }
-        catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             Validaciones.mostrarError(e.getMessage());
             closeClient();
         }
     }
 
+    public static void main(String[] args) {
+        String serverAddress = "127.0.0.1";  // Cambia a la dirección IP o nombre de host de tu servidor
+        int serverPort = 12345;  // Cambia al puerto en el que escucha tu servidor
+
+        SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
+    }
+
     private void closeClient() {
-        System.err.println("closeClient");
+        System.err.println("close client");
         try {
             receiverThread.setReceive(false);
             if (serverSocket != null)
                 serverSocket.close();
-            if (multicastSocket != null) {
-                multicastSocket.leaveGroup(group);
-                multicastSocket.close();
-            }
+//            if (multicastSocket != null) {
+//                multicastSocket.leaveGroup(group);
+//                multicastSocket.close();
+//            }
         } catch (IOException ex) {
             Validaciones.mostrarError(ex.getMessage());
         }
-
     }
 
     private void sendMessage(String message) {
@@ -137,12 +149,5 @@ public class ChatClient {
                 Validaciones.mostrarError(e.getMessage());
             }
         }
-    }
-
-    public static void main(String[] args) {
-        String serverAddress = "127.0.0.1";  // Cambia a la dirección IP o nombre de host de tu servidor
-        int serverPort = 12345;  // Cambia al puerto en el que escucha tu servidor
-
-        SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
     }
 }
