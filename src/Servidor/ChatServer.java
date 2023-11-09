@@ -2,6 +2,7 @@ package Servidor;
 
 import Common.ChatMsg;
 import Common.ConnectionData;
+import Common.Message;
 
 import java.io.*;
 import java.net.*;
@@ -53,11 +54,28 @@ public class ChatServer {
    //     }
    // }
 
+    private static void broadcast(Message message) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(message);
+            objectOutputStream.flush();
+
+            // Obtener el array de bytes serializado
+            byte[] serializedData = byteArrayOutputStream.toByteArray();
+
+            // Crear el DatagramPacket y enviar los datos
+            InetAddress group = InetAddress.getByName("239.0.0.1");
+            DatagramPacket packet = new DatagramPacket(serializedData, serializedData.length, group, 8888);
+            multicastSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+/*
     private static void broadcast(String message) {
         ChatMsg data = new ChatMsg(message);
         try {
-            System.out.println(message);
-
             // Crear un ObjectOutputStream para serializar el objeto
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -75,7 +93,7 @@ public class ChatServer {
             e.printStackTrace();
         }
     }
-
+*/
     private static class ClientHandler implements Runnable {
         private Socket clientSocket;
         private String nickname;
@@ -101,7 +119,9 @@ public class ChatServer {
                         nicknameAccepted = true;
                         out.writeObject("Nickname accepted. Welcome to the chat!");
                         out.flush();
-                        broadcast(nickname + " has joined the chat.");
+                       // broadcast(nickname + " has joined the chat.");
+                        List<String> connectedUsersList = new ArrayList<>(connectedClients.keySet());
+                        broadcast(new ConnectionData(nickname, " has joined the chat.", connectedUsersList));
                     } else {
                         out.writeObject("Nickname is already in use. Please choose another one.");
                         out.flush();
@@ -109,19 +129,20 @@ public class ChatServer {
                     }
                 }
                 List<String> connectedUsersList = new ArrayList<>(connectedClients.keySet());
-                out.writeObject(new ConnectionData(connectedUsersList));
+                out.writeObject(new ConnectionData(nickname, "", connectedUsersList));
                 out.flush();
 
                 while (true) {
                     Object message = in.readObject();
-                    broadcast(nickname + ": " + message);
+                    //broadcast(nickname + ": " + message);
+                    broadcast(new ChatMsg(nickname, ": " + message));
                 }
             } catch (SocketException cnEx) {
                 System.err.println("SocketException: " + cnEx.getMessage());
                 disconectClient();
             } catch (EOFException eofEx) {
                 System.err.println("EOFException: " + eofEx.getMessage());
-//                disconectClient();
+                disconectClient();
             } catch (ClassNotFoundException e) {
                 System.err.println("ClassNotFoundException " + e.getMessage());
                 disconectClient();
@@ -135,7 +156,9 @@ public class ChatServer {
             if (nickname != null) {
                 System.out.println(nickname + " has left the chat.");
                 connectedClients.remove(nickname);
-                broadcast(nickname + " has left the chat.");
+                //broadcast(nickname + " has left the chat.");
+                List<String> connectedUsersList = new ArrayList<>(connectedClients.keySet());
+                broadcast(new ConnectionData(nickname, " has left the chat.", connectedUsersList));
             }
         }
     }

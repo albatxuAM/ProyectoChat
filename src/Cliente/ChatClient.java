@@ -123,7 +123,8 @@ public class ChatClient {
     private void closeClient() {
         System.err.println("close client");
         try {
-            receiverThread.setReceive(false);
+            if (receiverThread != null)
+                receiverThread.setReceive(false);
             if (serverSocket != null)
                 serverSocket.close();
 //            if (multicastSocket != null) {

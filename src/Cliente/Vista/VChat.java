@@ -2,6 +2,11 @@ package Cliente.Vista;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
 import java.util.List;
 
 public class VChat {
@@ -12,12 +17,13 @@ public class VChat {
     private JPanel pBotones;
     private JButton enviarButton, logOutButton;
     private JTextField tfMsg;
-    private JTextArea chatArea;
+    private JTextPane chatArea;
     private JTable userList;
 
     public VChat(/*Usuario user*/) {
         // pTabs.addTab("Resultados", new VPrincipal(user).getpPrincipal());
-
+        chatArea.setContentType("text/html");
+        chatArea.setEditable(false);
     }
 
     public static void main(String[] args) {
@@ -34,13 +40,26 @@ public class VChat {
         return pPrincipal;
     }
 
-    public JTextArea getChatArea() {
-        return chatArea;
-    }
 
-    public void appendToChatArea(String message) {
-        chatArea.append(message + "\n");
-        System.out.println(message);
+//    public void appendToChatArea( String message) {
+//        chatArea.append(message + "\n");
+//        System.out.println(message);
+//    }
+
+    public void appendToChatArea(String nickname, String message) {
+        try {
+            StyledDocument doc = chatArea.getStyledDocument();
+            SimpleAttributeSet keyWord = new SimpleAttributeSet();
+            StyleConstants.setBold(keyWord, true);
+
+            SimpleAttributeSet keyWordMsg = new SimpleAttributeSet();
+             StyleConstants.setForeground(keyWordMsg, Color.RED);
+
+            doc.insertString(doc.getLength(), nickname + ": ", keyWord);
+            doc.insertString(doc.getLength(), message + "\n", keyWordMsg);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
 
         /*
           // Crear estilos para diferentes colores

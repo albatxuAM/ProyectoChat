@@ -4,6 +4,7 @@ import Cliente.Modelo.Excepciones.Validaciones;
 import Cliente.Vista.VChat;
 import Common.ChatMsg;
 import Common.ConnectionData;
+import Common.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +56,7 @@ public class MessageReceiverThread extends Thread {
                 }
                 if (receivedObject instanceof ChatMsg) {
                     ChatMsg chatMsg = (ChatMsg) receivedObject;
-                    SwingUtilities.invokeLater(() -> appendToChatArea(chatMsg.getMsg()));
+                    SwingUtilities.invokeLater(() -> appendToChatArea(chatMsg));
                 }
                 else {
                     String message = new String(packet.getData(), 0, packet.getLength());
@@ -92,12 +93,17 @@ public class MessageReceiverThread extends Thread {
         this.receive = receive;
     }
 
+    private void appendToChatArea(Message message) {
+        String formattedMessage = "<b>" + message.getNickname() + "</b> " + message.getMsg();
+        vChat.appendToChatArea(message.getNickname(), message.getMsg());
+    }
+
     private void appendToChatArea(String message) {
-        vChat.appendToChatArea(message);
+    //    vChat.appendToChatArea(message);
     }
 
     private void appendToChatArea(String message, Color color) {
-        vChat.appendToChatArea(message);
+        //vChat.appendToChatArea(message);
     }
 
 
