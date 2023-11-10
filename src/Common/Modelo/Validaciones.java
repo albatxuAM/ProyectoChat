@@ -1,4 +1,4 @@
-package Cliente.Modelo.Excepciones;
+package Common.Modelo;
 
 import javax.swing.*;
 import java.time.LocalDate;

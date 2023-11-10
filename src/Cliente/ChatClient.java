@@ -1,6 +1,6 @@
 package Cliente;
 
-import Cliente.Modelo.Excepciones.Validaciones;
+import Common.Modelo.Validaciones;
 import Cliente.Vista.VChat;
 import Common.ConnectionData;
 
@@ -38,7 +38,7 @@ public class ChatClient {
             in = new ObjectInputStream(serverSocket.getInputStream());
             nickname = null;
 
-            vChat = new VChat();  // Crea una instancia de VChat
+            vChat = new VChat();
             // Establece VChat como el contenido principal del JFrame
             JFrame frame = new JFrame("Chat Client");
             frame.setContentPane(vChat.getpPrincipal());

@@ -1,8 +1,6 @@
-package Cliente.Controlador.Mangers;
+package Common.Mangers;
 
-import Cliente.Modelo.Usuario;
 import Cliente.Vista.VChat;
-import Cliente.Vista.VLogin;
 
 import javax.swing.*;
 
@@ -23,21 +21,7 @@ public class VentanasManager {
         return instance;
     }
 
-    public void mostrarVentanaLogin() {
-        cerrarVentana();
-        VActive = new JFrame("Inicio de sesion");
-        VActive.setContentPane(new VLogin().getpPrincipal());
-        configurarVentana(VActive);
-    }
-
-    public void mostrarVentanaCarga(Usuario user) {
-        cerrarVentana();
-        VActive = new JFrame("Cargando...");
-        //    VActive.setContentPane(new VCarga(user).getpPrincipal());
-        configurarVentana(VActive);
-    }
-
-    public void mostrarVentanaDashboard(Usuario user) {
+    public void mostrarVentanaDashboard() {
         cerrarVentana();
         VActive = new JFrame("LIGA TicTacToe");
         VActive.setContentPane(new VChat().getpPrincipal());

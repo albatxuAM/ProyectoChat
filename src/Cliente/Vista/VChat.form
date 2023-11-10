@@ -59,7 +59,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="789f3" class="javax.swing.JTextPane" binding="chatArea">
+                          <component id="eb5ce" class="javax.swing.JTextArea" binding="chatArea">
                             <constraints/>
                             <properties/>
                           </component>

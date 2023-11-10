@@ -1,6 +1,6 @@
 package Cliente;
 
-import Cliente.Modelo.Excepciones.Validaciones;
+import Common.Modelo.Validaciones;
 import Cliente.Vista.VChat;
 import Common.ChatMsg;
 import Common.ConnectionData;
@@ -54,7 +54,7 @@ public class MessageReceiverThread extends Thread {
                     List<String> connectedUsers = connectionData.getConnectedUsers();
                     SwingUtilities.invokeLater(() -> updateUsers(connectedUsers));
                 }
-                if (receivedObject instanceof ChatMsg) {
+                else if (receivedObject instanceof ChatMsg) {
                     ChatMsg chatMsg = (ChatMsg) receivedObject;
                     SwingUtilities.invokeLater(() -> appendToChatArea(chatMsg));
                 }
