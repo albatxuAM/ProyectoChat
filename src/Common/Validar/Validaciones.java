@@ -1,4 +1,4 @@
-package Common.Modelo;
+package Common.Validar;
 
 import javax.swing.*;
 import java.time.LocalDate;

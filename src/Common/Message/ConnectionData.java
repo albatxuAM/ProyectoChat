@@ -1,7 +1,6 @@
-package Common;
+package Common.Message;
 
 import java.awt.*;
-import java.io.Serializable;
 import java.util.List;
 
 public class ConnectionData extends ChatMsg {

@@ -1,13 +1,12 @@
 package Cliente;
 
-import Common.Modelo.Validaciones;
 import Cliente.Vista.VChat;
-import Common.ChatMsg;
-import Common.ConnectionData;
-import Common.Message;
+import Common.Message.ChatMsg;
+import Common.Message.ConnectionData;
+import Common.Message.Message;
+import Common.Validar.Validaciones;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,12 +34,6 @@ public class MessageReceiverThread extends Thread {
             byte[] buffer = new byte[1024];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
-//            while (receive) {
-//                multicastSocket.receive(packet);
-//                String message = new String(packet.getData(), 0, packet.getLength());
-//
-//                SwingUtilities.invokeLater(() -> appendToChatArea(message));
-//            }
             while (receive) {
                 multicastSocket.receive(packet);
 
@@ -53,12 +46,11 @@ public class MessageReceiverThread extends Thread {
                     ConnectionData connectionData = (ConnectionData) receivedObject;
                     List<String> connectedUsers = connectionData.getConnectedUsers();
                     SwingUtilities.invokeLater(() -> updateUsers(connectedUsers));
-                }
-                else if (receivedObject instanceof ChatMsg) {
+                    SwingUtilities.invokeLater(() -> appendToChatArea(connectionData.getNickname(), connectionData.getMsg()));
+                } else if (receivedObject instanceof ChatMsg) {
                     ChatMsg chatMsg = (ChatMsg) receivedObject;
                     SwingUtilities.invokeLater(() -> appendToChatArea(chatMsg));
-                }
-                else {
+                } else {
                     String message = new String(packet.getData(), 0, packet.getLength());
                     SwingUtilities.invokeLater(() -> appendToChatArea(message));
 
@@ -70,7 +62,7 @@ public class MessageReceiverThread extends Thread {
             Validaciones.mostrarError("Connection ended");
             receive = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            Validaciones.mostrarError(e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +78,6 @@ public class MessageReceiverThread extends Thread {
         } catch (IOException ex) {
             Validaciones.mostrarError(ex.getMessage());
         }
-
     }
 
     public void setReceive(boolean receive) {
@@ -99,11 +90,11 @@ public class MessageReceiverThread extends Thread {
     }
 
     private void appendToChatArea(String message) {
-    //    vChat.appendToChatArea(message);
+        vChat.appendToChatArea(message);
     }
 
-    private void appendToChatArea(String message, Color color) {
-        //vChat.appendToChatArea(message);
+    private void appendToChatArea(String nickname, String message) {
+        vChat.appendToChatArea(nickname, message);
     }
 
 

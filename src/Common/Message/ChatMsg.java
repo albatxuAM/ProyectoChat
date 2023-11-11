@@ -1,7 +1,6 @@
-package Common;
+package Common.Message;
 
 import java.awt.*;
-import java.io.Serializable;
 
 public class ChatMsg implements Message {
     private String msg;
@@ -24,23 +23,22 @@ public class ChatMsg implements Message {
         return msg;
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public Color getColor() {
         return color;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public void setColor(Color color) {
         this.color = color;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
 
     public void setMyNickname(String nickname) {
         this.nickname = nickname;

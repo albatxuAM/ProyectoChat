@@ -1,9 +1,6 @@
-package Common;
+package Common.Message;
 
 import java.awt.*;
-import java.io.Serializable;
-
-import java.awt.Color;
 
 public class PrivateMsg extends ChatMsg {
     private String otherNickname;

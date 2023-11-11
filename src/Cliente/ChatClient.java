@@ -1,8 +1,8 @@
 package Cliente;
 
-import Common.Modelo.Validaciones;
 import Cliente.Vista.VChat;
-import Common.ConnectionData;
+import Common.Message.ConnectionData;
+import Common.Validar.Validaciones;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -25,7 +25,8 @@ public class ChatClient {
     private Socket serverSocket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private VChat vChat;  // Referencia a la ventana VChat
+    private JFrame frame;
+    private VChat vChat;
     private String nickname;
 
     private boolean exit = false;
@@ -40,7 +41,7 @@ public class ChatClient {
 
             vChat = new VChat();
             // Establece VChat como el contenido principal del JFrame
-            JFrame frame = new JFrame("Chat Client");
+            frame = new JFrame("Chat Client");
             frame.setContentPane(vChat.getpPrincipal());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 300);
@@ -97,6 +98,11 @@ public class ChatClient {
                 }
             });
 
+            // Agregar un ActionListener al botón LogOutButton
+            vChat.getLogOutButton().addActionListener(e -> {
+                closeClient();
+            });
+
             // cerrar conexiones al cerrar la aplicación
             frame.addWindowListener(new WindowAdapter() {
                 @Override
@@ -131,6 +137,10 @@ public class ChatClient {
 //                multicastSocket.leaveGroup(group);
 //                multicastSocket.close();
 //            }
+
+            if(frame != null)
+                frame.dispose();
+
         } catch (IOException ex) {
             Validaciones.mostrarError(ex.getMessage());
         }
