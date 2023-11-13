@@ -36,10 +36,17 @@ public class ChatServer {
         }
     }
 
+    /**
+     * @param nickname
+     * @return
+     */
     private static boolean isNicknameAvailable(String nickname) {
         return !connectedClients.containsKey(nickname);
     }
 
+    /**
+     * @param message
+     */
     private static void broadcast(Message message) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -63,10 +70,16 @@ public class ChatServer {
         private Socket clientSocket;
         private String nickname;
 
+        /**
+         * @param socket
+         */
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
         }
 
+        /**
+         *
+         */
         @Override
         public void run() {
             try {
@@ -114,6 +127,9 @@ public class ChatServer {
             }
         }
 
+        /**
+         *
+         */
         private void disconectClient() {
             if (nickname != null) {
                 System.out.println(nickname + "has left the chat.");

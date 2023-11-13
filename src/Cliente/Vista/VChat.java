@@ -15,6 +15,9 @@ public class VChat {
     private JTextArea chatArea;
     private JTable userList;
 
+    /**
+     *
+     */
     public VChat() {
         // pTabs.addTab("Resultados", new VPrincipal(user).getpPrincipal());
         // chatArea.setContentType("text/html");
@@ -31,20 +34,33 @@ public class VChat {
         frame.setLocationRelativeTo(null);
     }
 
+    /**
+     * @return pPrincipal
+     */
     public JPanel getpPrincipal() {
         return pPrincipal;
     }
 
+    /**
+     * @param nickname
+     * @param message
+     */
     public void appendToChatArea(String nickname, String message) {
         chatArea.append(nickname + ": " + message + "\n");
         System.out.println(nickname + ": " + message);
     }
 
+    /**
+     * @param message
+     */
     public void appendToChatArea(String message) {
         chatArea.append(message + "\n");
         System.out.println(message);
     }
 
+    /**
+     * @param connectedUsers
+     */
     public void updateConnectedUsersList(List<String> connectedUsers) {
         System.out.println(connectedUsers);
         DefaultTableModel model = new DefaultTableModel() {
@@ -61,14 +77,23 @@ public class VChat {
         userList.setModel(model);
     }
 
+    /**
+     * @return enviarButton
+     */
     public JButton getEnviarButton() {
         return enviarButton;
     }
 
+    /**
+     * @return getLogOutButton
+     */
     public JButton getLogOutButton() {
         return logOutButton;
     }
 
+    /**
+     * @return tfMsg
+     */
     public JTextField getTfMsg() {
         return tfMsg;
     }

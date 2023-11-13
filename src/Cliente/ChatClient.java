@@ -31,6 +31,10 @@ public class ChatClient {
 
     private boolean exit = false;
 
+    /**
+     * @param serverAddress
+     * @param serverPort
+     */
     public ChatClient(String serverAddress, int serverPort) {
         //try (Socket serverSocket = new Socket(serverAddress, serverPort)) {
         try {
@@ -126,6 +130,9 @@ public class ChatClient {
         SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
     }
 
+    /**
+     *
+     */
     private void closeClient() {
         System.err.println("close client");
         try {
@@ -138,7 +145,7 @@ public class ChatClient {
 //                multicastSocket.close();
 //            }
 
-            if(frame != null)
+            if (frame != null)
                 frame.dispose();
 
         } catch (IOException ex) {
@@ -146,6 +153,9 @@ public class ChatClient {
         }
     }
 
+    /**
+     * @param message
+     */
     private void sendMessage(String message) {
         if (message != null && !message.isEmpty()) {
             try {

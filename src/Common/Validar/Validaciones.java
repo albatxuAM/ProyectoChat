@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
 
 public class Validaciones {
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarTexto(JTextField textField) {
         try {
             String nombre = textField.getText();
@@ -31,6 +35,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarInt(JTextField textField) {
         try {
             String num_s = textField.getText();
@@ -53,6 +61,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarFloat(JTextField textField) {
         try {
             String num_s = textField.getText();
@@ -75,6 +87,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarFecha(JTextField textField) {
         try {
             String date_s = textField.getText();
@@ -102,6 +118,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarFechaPosterior(JTextField textField) {
         try {
             String date_s = textField.getText();
@@ -129,6 +149,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param hora
+     * @return
+     */
     public static boolean validarHora(JTextField hora) {
         try {
             String hora_s = hora.getText();
@@ -147,6 +171,10 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param textField
+     * @return
+     */
     public static boolean validarEmail(JTextField textField) {
         try {
             String email = textField.getText();
@@ -170,11 +198,13 @@ public class Validaciones {
         }
     }
 
+    /**
+     * @param mensaje
+     */
     public static void mostrarError(String mensaje) {
         String[] botones = {"Aceptar"};
         JOptionPane.showOptionDialog(null, mensaje, "ERROR",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, botones, botones[0]);
     }
-
 
 }

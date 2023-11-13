@@ -22,12 +22,20 @@ public class MessageReceiverThread extends Thread {
     private VChat vChat;
     private boolean receive = true;
 
+    /**
+     * @param multicastSocket
+     * @param vChat
+     * @param group
+     */
     public MessageReceiverThread(MulticastSocket multicastSocket, VChat vChat, InetAddress group) {
         this.group = group;
         this.multicastSocket = multicastSocket;
         this.vChat = vChat;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         try {
@@ -68,6 +76,9 @@ public class MessageReceiverThread extends Thread {
         }
     }
 
+    /**
+     *
+     */
     private void closeClient() {
         System.err.println("close broadcast");
         try {
@@ -80,24 +91,40 @@ public class MessageReceiverThread extends Thread {
         }
     }
 
+    /**
+     * @param receive
+     */
     public void setReceive(boolean receive) {
         this.receive = receive;
     }
 
+    /**
+     * @param message
+     */
     private void appendToChatArea(Message message) {
         String formattedMessage = "<b>" + message.getNickname() + "</b> " + message.getMsg();
         vChat.appendToChatArea(message.getNickname(), message.getMsg());
     }
 
+    /**
+     * @param message
+     */
     private void appendToChatArea(String message) {
         vChat.appendToChatArea(message);
     }
 
+    /**
+     * @param nickname
+     * @param message
+     */
     private void appendToChatArea(String nickname, String message) {
         vChat.appendToChatArea(nickname, message);
     }
 
 
+    /**
+     * @param connectedUsers
+     */
     private void updateUsers(List<String> connectedUsers) {
         vChat.updateConnectedUsersList(connectedUsers);
     }
