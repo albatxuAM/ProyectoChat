@@ -199,7 +199,7 @@ public class Validaciones {
     }
 
     /**
-     * @param mensaje
+     * @param mensaje mensaje a mostrar en la ventana de error
      */
     public static void mostrarError(String mensaje) {
         String[] botones = {"Aceptar"};

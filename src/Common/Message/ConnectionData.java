@@ -7,9 +7,9 @@ public class ConnectionData extends ChatMsg {
     private List<String> connectedUsers;
 
     /**
-     * @param nickname
-     * @param msg
-     * @param connectedUsers
+     * @param nickname nombre de usuario
+     * @param msg el texto del mensaje
+     * @param connectedUsers lista de usuarios conectados
      */
     public ConnectionData(String nickname, String msg, List<String> connectedUsers) {
         super(nickname, msg);
@@ -17,10 +17,10 @@ public class ConnectionData extends ChatMsg {
     }
 
     /**
-     * @param nickname
-     * @param msg
-     * @param color
-     * @param connectedUsers
+     * @param nickname nombre de usuario
+     * @param msg el texto del mensaje
+     * @param color color del texto
+     * @param connectedUsers  lista de usuarios conectados
      */
     public ConnectionData(String nickname, String msg, Color color, List<String> connectedUsers) {
         super(nickname, msg, color);
@@ -28,7 +28,7 @@ public class ConnectionData extends ChatMsg {
     }
 
     /**
-     * @return connectedUsers
+     * @return lista de usuarios conectados
      */
     public List<String> getConnectedUsers() {
         return connectedUsers;

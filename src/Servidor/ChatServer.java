@@ -42,8 +42,9 @@ public class ChatServer {
 
     /**
      * Comprobar que el nickanme no existe
-     * @param nickname
-     * @return
+     *
+     * @param nickname nombre del usuario
+     * @return si el nombre de usario esta libre o no
      */
     private static boolean isNicknameAvailable(String nickname) {
         return !connectedClients.containsKey(nickname);
@@ -51,7 +52,8 @@ public class ChatServer {
 
     /**
      * Mandar un mensaje mediante multicast socket
-     * @param message
+     *
+     * @param message mensaje para enviar
      */
     private static void broadcast(Message message) {
         try {
@@ -66,7 +68,7 @@ public class ChatServer {
             // Crear el DatagramPacket y enviar los datos
             //InetAddress group = InetAddress.getByName("239.0.0.1");
             DatagramPacket packet = new DatagramPacket(serializedData, serializedData.length,
-                                            group, ConfigManager.getInstance().getBroadcastPort());
+                    group, ConfigManager.getInstance().getBroadcastPort());
             multicastSocket.send(packet);
         } catch (IOException e) {
             if (ConfigManager.getInstance().getDebug())
@@ -74,12 +76,15 @@ public class ChatServer {
         }
     }
 
+    /**
+     * Thead para manejar cada cliente
+     */
     private static class ClientHandler implements Runnable {
         private Socket clientSocket;
         private String nickname;
 
         /**
-         * @param socket
+         * @param socket socket del cliente
          */
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;

@@ -24,9 +24,9 @@ public class MessageReceiverThread extends Thread {
     private boolean receive = true;
 
     /**
-     * @param multicastSocket
-     * @param vChat
-     * @param group
+     * @param multicastSocket socket multicast con la ip del chat
+     * @param vChat Ventana con el entorno grafico del chat
+     * @param group grupo de del multicast
      */
     public MessageReceiverThread(MulticastSocket multicastSocket, VChat vChat, InetAddress group) {
         this.group = group;
@@ -67,16 +67,16 @@ public class MessageReceiverThread extends Thread {
 
             }
         } catch (SocketException cnEx) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(cnEx.getMessage());
             Validaciones.mostrarError("Connection ended");
             receive = false;
         } catch (IOException e) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(e.getMessage());
             Validaciones.mostrarError(e.getMessage());
         } catch (ClassNotFoundException e) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
@@ -93,7 +93,7 @@ public class MessageReceiverThread extends Thread {
                 multicastSocket.close();
             }
         } catch (IOException e) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(e.getMessage());
             Validaciones.mostrarError(e.getMessage());
         }
@@ -101,14 +101,15 @@ public class MessageReceiverThread extends Thread {
 
     /**
      * Setter
-     * @param receive
+     *
+     * @param receive boleana para controlar si el thread sigue activo
      */
     public void setReceive(boolean receive) {
         this.receive = receive;
     }
 
     /**
-     * @param message
+     * @param message mensaje recibido
      */
     private void appendToChatArea(Message message) {
         String formattedMessage = "<b>" + message.getNickname() + "</b> " + message.getMsg();
@@ -117,7 +118,8 @@ public class MessageReceiverThread extends Thread {
 
     /**
      * Imprimir mensaje en el área de chat
-     * @param message
+     *
+     * @param message mensaje recibido
      */
     private void appendToChatArea(String message) {
         vChat.appendToChatArea(message);
@@ -125,8 +127,9 @@ public class MessageReceiverThread extends Thread {
 
     /**
      * Imprimir mensaje en el área de chat
-     * @param nickname
-     * @param message
+     *
+     * @param nickname nombre de usuario del mensaje
+     * @param message  mensaje recibido
      */
     private void appendToChatArea(String nickname, String message) {
         vChat.appendToChatArea(nickname, message);
@@ -135,7 +138,8 @@ public class MessageReceiverThread extends Thread {
 
     /**
      * Actualizar lista de usuarios
-     * @param connectedUsers
+     *
+     * @param connectedUsers lista de usuarios conectados
      */
     private void updateUsers(List<String> connectedUsers) {
         vChat.updateConnectedUsersList(connectedUsers);

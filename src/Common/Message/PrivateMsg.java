@@ -6,9 +6,9 @@ public class PrivateMsg extends ChatMsg {
     private String otherNickname;
 
     /**
-     * @param msg
-     * @param myNickname
-     * @param otherNickname
+     * @param msg el texto del mensaje
+     * @param myNickname nombre de usuario que envia el mensaje
+     * @param otherNickname nombre de usuario que recibe el mensaje
      */
     public PrivateMsg(String msg, String myNickname, String otherNickname) {
         super(myNickname, msg);
@@ -16,10 +16,10 @@ public class PrivateMsg extends ChatMsg {
     }
 
     /**
-     * @param msg
-     * @param myNickname
-     * @param otherNickname
-     * @param color
+     * @param msg el texto del mensaje
+     * @param myNickname nombre de usuario que envia el mensaje
+     * @param otherNickname nombre de usuario que recibe el mensaje
+     * @param color color del texto
      */
     public PrivateMsg(String msg, String myNickname, String otherNickname, Color color) {
         super(myNickname, msg, color);

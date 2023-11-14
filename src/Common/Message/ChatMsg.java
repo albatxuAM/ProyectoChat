@@ -8,8 +8,8 @@ public class ChatMsg implements Message {
     private String nickname;
 
     /**
-     * @param nickname
-     * @param msg
+     * @param nickname nombre de usuario
+     * @param msg el texto del mensaje
      */
     public ChatMsg(String nickname, String msg) {
         this.nickname = nickname;
@@ -17,9 +17,9 @@ public class ChatMsg implements Message {
     }
 
     /**
-     * @param nickname
-     * @param msg
-     * @param color
+     * @param nickname nombre de usuario
+     * @param msg el texto del mensaje
+     * @param color color del mensaje
      */
     public ChatMsg(String nickname, String msg, Color color) {
         this.nickname = nickname;
@@ -36,14 +36,14 @@ public class ChatMsg implements Message {
     }
 
     /**
-     * @param msg
+     * @param msg el texto del mensaje
      */
     public void setMsg(String msg) {
         this.msg = msg;
     }
 
     /**
-     * @return color
+     * @return color del texto
      */
     @Override
     public Color getColor() {
@@ -51,21 +51,21 @@ public class ChatMsg implements Message {
     }
 
     /**
-     * @param color
+     * @param color color del texto
      */
     public void setColor(Color color) {
         this.color = color;
     }
 
     /**
-     * @return nickname
+     * @return nickname nombre de usuario
      */
     public String getNickname() {
         return nickname;
     }
 
     /**
-     * @param nickname
+     * @param nickname nombre de usuario
      */
     public void setMyNickname(String nickname) {
         this.nickname = nickname;

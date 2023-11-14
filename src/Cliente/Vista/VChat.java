@@ -1,7 +1,5 @@
 package Cliente.Vista;
 
-import Common.Mangers.ConfigManager;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -41,16 +39,18 @@ public class VChat {
 
     /**
      * Getter
-     * @return pPrincipal
+     *
+     * @return pPrincipal panel principal del chat
      */
     public JPanel getpPrincipal() {
         return pPrincipal;
     }
 
     /**
-     * * Funcion para anadir mensajes a el chatArea
-     * @param nickname
-     * @param message
+     * * Funcion para anadir mensajes al chatArea
+     *
+     * @param nickname usuario que envia el mensaje
+     * @param message mensaje enviado
      */
     public void appendToChatArea(String nickname, String message) {
         chatArea.append(nickname + ": " + message + "\n");
@@ -58,8 +58,9 @@ public class VChat {
     }
 
     /**
-     * Funcion para anadir mensajes a el chatArea
-     * @param message
+     * Funcion para anadir mensajes al chatArea
+     *
+     * @param message mensaje enviado
      */
     public void appendToChatArea(String message) {
         chatArea.append(message + "\n");
@@ -68,7 +69,8 @@ public class VChat {
 
     /**
      * Funcion para actualizar la lista de usuarios conectdos
-     * @param connectedUsers
+     *
+     * @param connectedUsers lista de usuarios conectados
      */
     public void updateConnectedUsersList(List<String> connectedUsers) {
         System.out.println(connectedUsers);
@@ -88,7 +90,8 @@ public class VChat {
 
     /**
      * Getter
-     * @return enviarButton
+     *
+     * @return enviarButton boton de enviar
      */
     public JButton getEnviarButton() {
         return enviarButton;
@@ -96,7 +99,8 @@ public class VChat {
 
     /**
      * Getter
-     * @return getLogOutButton
+     *
+     * @return getLogOutButton boton de cerrar sesion
      */
     public JButton getLogOutButton() {
         return logOutButton;
@@ -104,11 +108,17 @@ public class VChat {
 
     /**
      * Getter
-     * @return tfMsg
+     *
+     * @return tfMsg campo de texto donde se encuentra el mensaje
      */
     public JTextField getTfMsg() {
         return tfMsg;
     }
 
-     public void setNickname(String nickname) { lNickname.setText(nickname);}
+    /**
+     * @param nickname nombre de usuario para mostrar en pantalla
+     */
+    public void setNickname(String nickname) {
+        lNickname.setText(nickname);
+    }
 }

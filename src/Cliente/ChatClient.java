@@ -32,8 +32,9 @@ public class ChatClient {
 
     /**
      * Constructor del cliente al que se pasan los datos del servidor
-     * @param serverAddress
-     * @param serverPort
+     *
+     * @param serverAddress IP del servidor al que conectarse
+     * @param serverPort puerto del servidor al que conectarse
      */
     public ChatClient(String serverAddress, int serverPort) {
         try {
@@ -123,12 +124,12 @@ public class ChatClient {
                 }
             });
         } catch (ConnectException cnEx) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println("ConnectException " + cnEx.getMessage());
             Validaciones.mostrarError("Connection refused");
             closeClient();
         } catch (IOException | ClassNotFoundException e) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(e.getMessage());
             Validaciones.mostrarError(e.getMessage());
             closeClient();
@@ -160,7 +161,7 @@ public class ChatClient {
                 frame.dispose();
 
         } catch (IOException e) {
-            if(ConfigManager.getInstance().getDebug())
+            if (ConfigManager.getInstance().getDebug())
                 System.out.println(e.getMessage());
             Validaciones.mostrarError(e.getMessage());
         }
@@ -168,7 +169,8 @@ public class ChatClient {
 
     /**
      * mandar un mensaje al servidor mediante TCP
-     * @param message
+     *
+     * @param message mensaje a enviar al servidor
      */
     private void sendMessage(String message) {
         if (message != null && !message.isEmpty()) {
@@ -176,7 +178,7 @@ public class ChatClient {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                if(ConfigManager.getInstance().getDebug())
+                if (ConfigManager.getInstance().getDebug())
                     System.out.println(e.getMessage());
                 Validaciones.mostrarError(e.getMessage());
             }
