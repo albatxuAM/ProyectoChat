@@ -1,5 +1,6 @@
 package Servidor;
 
+import Common.Mangers.ConfigManager;
 import Common.Message.ChatMsg;
 import Common.Message.ConnectionData;
 import Common.Message.Message;
@@ -12,18 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatServer {
-    private static final int PUERTO = 12345;
+    private static final int PUERTO = ConfigManager.getInstance().getServerPort();
     private static Map<String, Socket> connectedClients = new HashMap<>();
     private static MulticastSocket multicastSocket;
+    private static InetAddress group;
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
             System.out.println("Server listening on port " + PUERTO + "...");
 
-            connectedClients.put("alba", new Socket());
+            if (ConfigManager.getInstance().getDebug())
+                connectedClients.put("alba", new Socket());
 
-            multicastSocket = new MulticastSocket(8888);
-            InetAddress group = InetAddress.getByName("239.0.0.1");
+            multicastSocket = new MulticastSocket(ConfigManager.getInstance().getBroadcastPort());
+            group = InetAddress.getByName(ConfigManager.getInstance().getBroadcastIP());
             multicastSocket.joinGroup(group);
 
             while (true) {
@@ -32,11 +35,13 @@ public class ChatServer {
                 clientThread.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            if (ConfigManager.getInstance().getDebug())
+                System.out.println(e.getMessage());
         }
     }
 
     /**
+     * Comprobar que el nickanme no existe
      * @param nickname
      * @return
      */
@@ -45,6 +50,7 @@ public class ChatServer {
     }
 
     /**
+     * Mandar un mensaje mediante multicast socket
      * @param message
      */
     private static void broadcast(Message message) {
@@ -58,11 +64,13 @@ public class ChatServer {
             byte[] serializedData = byteArrayOutputStream.toByteArray();
 
             // Crear el DatagramPacket y enviar los datos
-            InetAddress group = InetAddress.getByName("239.0.0.1");
-            DatagramPacket packet = new DatagramPacket(serializedData, serializedData.length, group, 8888);
+            //InetAddress group = InetAddress.getByName("239.0.0.1");
+            DatagramPacket packet = new DatagramPacket(serializedData, serializedData.length,
+                                            group, ConfigManager.getInstance().getBroadcastPort());
             multicastSocket.send(packet);
         } catch (IOException e) {
-            e.printStackTrace();
+            if (ConfigManager.getInstance().getDebug())
+                System.out.println(e.getMessage());
         }
     }
 
@@ -78,7 +86,8 @@ public class ChatServer {
         }
 
         /**
-         *
+         * Confimar que el nickaname esta disponible
+         * y quedar a la espera de recibir mensajes del cliente que enviar al resto
          */
         @Override
         public void run() {
@@ -113,26 +122,30 @@ public class ChatServer {
                     broadcast(new ChatMsg(nickname, message.toString()));
                 }
             } catch (SocketException cnEx) {
-                System.err.println("SocketException: " + cnEx.getMessage());
+                if (ConfigManager.getInstance().getDebug())
+                    System.err.println("SocketException: " + cnEx.getMessage());
                 disconectClient();
             } catch (EOFException eofEx) {
-                System.err.println("EOFException: " + eofEx.getMessage());
+                if (ConfigManager.getInstance().getDebug())
+                    System.err.println("EOFException: " + eofEx.getMessage());
                 disconectClient();
             } catch (ClassNotFoundException e) {
-                System.err.println("ClassNotFoundException " + e.getMessage());
+                if (ConfigManager.getInstance().getDebug())
+                    System.err.println("ClassNotFoundException " + e.getMessage());
                 disconectClient();
             } catch (IOException e) {
-                System.err.println("IOException " + e.getMessage());
+                if (ConfigManager.getInstance().getDebug())
+                    System.err.println("IOException " + e.getMessage());
                 disconectClient();
             }
         }
 
         /**
-         *
+         * Desconectar un cliente
          */
         private void disconectClient() {
             if (nickname != null) {
-                System.out.println(nickname + "has left the chat.");
+                System.err.println(nickname + "has left the chat.");
                 connectedClients.remove(nickname);
                 List<String> connectedUsersList = new ArrayList<>(connectedClients.keySet());
                 broadcast(new ConnectionData(nickname, "has left the chat.", connectedUsersList));

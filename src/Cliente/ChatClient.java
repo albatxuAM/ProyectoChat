@@ -1,6 +1,7 @@
 package Cliente;
 
 import Cliente.Vista.VChat;
+import Common.Mangers.ConfigManager;
 import Common.Message.ConnectionData;
 import Common.Validar.Validaciones;
 
@@ -29,22 +30,15 @@ public class ChatClient {
     private VChat vChat;
     private String nickname;
 
-    private boolean exit = false;
-
     /**
+     * Constructor del cliente al que se pasan los datos del servidor
      * @param serverAddress
      * @param serverPort
      */
     public ChatClient(String serverAddress, int serverPort) {
-        //try (Socket serverSocket = new Socket(serverAddress, serverPort)) {
         try {
-            serverSocket = new Socket(serverAddress, serverPort);
-            out = new ObjectOutputStream(serverSocket.getOutputStream());
-            in = new ObjectInputStream(serverSocket.getInputStream());
-            nickname = null;
-
+            //abrir ventana chat
             vChat = new VChat();
-            // Establece VChat como el contenido principal del JFrame
             frame = new JFrame("Chat Client");
             frame.setContentPane(vChat.getpPrincipal());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,6 +46,17 @@ public class ChatClient {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
+            //anadir icono a la ventana
+            ImageIcon icon = new ImageIcon(ConfigManager.getInstance().getIconPath());
+            frame.setIconImage(icon.getImage());
+
+            //realizar conexion TCP contra el servidor
+            serverSocket = new Socket(serverAddress, serverPort);
+            out = new ObjectOutputStream(serverSocket.getOutputStream());
+            in = new ObjectInputStream(serverSocket.getInputStream());
+            nickname = null;
+
+            // Comprobar nickname esta disponible
             boolean connAccepted = false;
             while (!connAccepted) {
 
@@ -76,10 +81,12 @@ public class ChatClient {
                 }
             }
 
+            //unirse al grupo multicast
             group = InetAddress.getByName("239.0.0.1");
             multicastSocket = new MulticastSocket(8888);
             multicastSocket.joinGroup(group);
 
+            //mandar a un thread toda la lectura
             receiverThread = new MessageReceiverThread(multicastSocket, vChat, group);
             receiverThread.start();
 
@@ -115,23 +122,26 @@ public class ChatClient {
                 }
             });
         } catch (ConnectException cnEx) {
+            if(ConfigManager.getInstance().getDebug())
+                System.out.println("ConnectException " + cnEx.getMessage());
             Validaciones.mostrarError("Connection refused");
             closeClient();
         } catch (IOException | ClassNotFoundException e) {
+            if(ConfigManager.getInstance().getDebug())
+                System.out.println(e.getMessage());
             Validaciones.mostrarError(e.getMessage());
             closeClient();
         }
     }
 
     public static void main(String[] args) {
-        String serverAddress = "127.0.0.1";
-        int serverPort = 12345;
-
-        SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
+        SwingUtilities.invokeLater(() -> new ChatClient(
+                ConfigManager.getInstance().getServerIP(),
+                ConfigManager.getInstance().getServerPort()));
     }
 
     /**
-     *
+     * Cerrar la conexion con el servidor
      */
     private void closeClient() {
         System.err.println("close client");
@@ -148,12 +158,15 @@ public class ChatClient {
             if (frame != null)
                 frame.dispose();
 
-        } catch (IOException ex) {
-            Validaciones.mostrarError(ex.getMessage());
+        } catch (IOException e) {
+            if(ConfigManager.getInstance().getDebug())
+                System.out.println(e.getMessage());
+            Validaciones.mostrarError(e.getMessage());
         }
     }
 
     /**
+     * mandar un mensaje al servidor mediante TCP
      * @param message
      */
     private void sendMessage(String message) {
@@ -162,6 +175,8 @@ public class ChatClient {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
+                if(ConfigManager.getInstance().getDebug())
+                    System.out.println(e.getMessage());
                 Validaciones.mostrarError(e.getMessage());
             }
         }

@@ -40,39 +40,32 @@ public class ConfigManager {
         return null;
     }
 
-    public String getImagePath() {
-        String path = getPropertyValue("image_path");
-        createDirectoryIfNotExists(path);
-        return path;
+    public String getIconPath() {
+        return getPropertyValue("icon_path");
     }
 
-    public String getDataPath() {
-        String path = getPropertyValue("data_path");
-        createDirectoryIfNotExists(path);
-        return path;
+    public String getServerIP() {
+        return getPropertyValue("server_ip");
     }
 
-    public String getXmlPath() {
-        String path = getPropertyValue("xml_path");
-        createDirectoryIfNotExists(path);
-        return path;
+    public int getServerPort() {
+        String propertyValue = getPropertyValue("server_port");
+        return Integer.parseInt(propertyValue);
     }
 
-    public String getXmlPathPartidas() {
-        String path = getPropertyValue("xml_partidas");
-        createDirectoryIfNotExists(path);
-        return path;
+    public String getBroadcastIP() {
+        return getPropertyValue("broadcast_ip");
     }
 
-    private void createDirectoryIfNotExists(String path) {
-        File directory = new File(path);
-        if (!directory.exists()) {
-            if (directory.mkdirs()) {
-                System.out.println("Directorio creado: " + path);
-            } else {
-                System.err.println("No se pudo crear el directorio: " + path);
-            }
-        }
+    public int getBroadcastPort() {
+        String propertyValue = getPropertyValue("broadcast_port");
+        return Integer.parseInt(propertyValue);
     }
+
+    public Boolean getDebug() {
+        String propertyValue = getPropertyValue("debug");
+        return propertyValue.equalsIgnoreCase("true");
+    }
+
 }
 

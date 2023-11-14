@@ -1,5 +1,7 @@
 package Cliente.Vista;
 
+import Common.Mangers.ConfigManager;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -16,7 +18,7 @@ public class VChat {
     private JTable userList;
 
     /**
-     *
+     * Constructor de la ventana que contiene el chat
      */
     public VChat() {
         // pTabs.addTab("Resultados", new VPrincipal(user).getpPrincipal());
@@ -24,6 +26,7 @@ public class VChat {
         chatArea.setEditable(false);
     }
 
+    /*
     public static void main(String[] args) {
         JFrame frame = new JFrame("VentanaPrincipal");
         frame.setContentPane(new VChat().pPrincipal);
@@ -33,8 +36,10 @@ public class VChat {
         frame.setTitle("Dashboard");
         frame.setLocationRelativeTo(null);
     }
+     */
 
     /**
+     * Getter
      * @return pPrincipal
      */
     public JPanel getpPrincipal() {
@@ -42,6 +47,7 @@ public class VChat {
     }
 
     /**
+     * * Funcion para anadir mensajes a el chatArea
      * @param nickname
      * @param message
      */
@@ -51,6 +57,7 @@ public class VChat {
     }
 
     /**
+     * Funcion para anadir mensajes a el chatArea
      * @param message
      */
     public void appendToChatArea(String message) {
@@ -59,6 +66,7 @@ public class VChat {
     }
 
     /**
+     * Funcion para actualizar la lista de usuarios conectdos
      * @param connectedUsers
      */
     public void updateConnectedUsersList(List<String> connectedUsers) {
@@ -78,6 +86,7 @@ public class VChat {
     }
 
     /**
+     * Getter
      * @return enviarButton
      */
     public JButton getEnviarButton() {
@@ -85,6 +94,7 @@ public class VChat {
     }
 
     /**
+     * Getter
      * @return getLogOutButton
      */
     public JButton getLogOutButton() {
@@ -92,6 +102,7 @@ public class VChat {
     }
 
     /**
+     * Getter
      * @return tfMsg
      */
     public JTextField getTfMsg() {
