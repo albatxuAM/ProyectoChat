@@ -73,6 +73,7 @@ public class ChatClient {
                     out.writeObject(nickname);
                     out.flush();
                 } else if (response.toString().contains("Nickname accepted")) {
+                    vChat.setNickname(nickname);
                     JOptionPane.showMessageDialog(null, response.toString(), "Server response", JOptionPane.INFORMATION_MESSAGE);
                     System.out.println(response);
                 } else {

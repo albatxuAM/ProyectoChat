@@ -16,6 +16,7 @@ public class VChat {
     private JTextField tfMsg;
     private JTextArea chatArea;
     private JTable userList;
+    private JLabel lNickname;
 
     /**
      * Constructor de la ventana que contiene el chat
@@ -108,4 +109,6 @@ public class VChat {
     public JTextField getTfMsg() {
         return tfMsg;
     }
+
+     public void setNickname(String nickname) { lNickname.setText(nickname);}
 }
